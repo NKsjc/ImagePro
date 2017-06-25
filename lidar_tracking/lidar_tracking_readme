@@ -1,0 +1,3 @@
+1、catkin_make
+2、source devel/setup.bash
+3、roslaunch lidar_trakcing sim0405.launch
