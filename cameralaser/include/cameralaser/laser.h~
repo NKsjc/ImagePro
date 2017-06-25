@@ -1,0 +1,9 @@
+/*
+ * Author :Jianchao Song
+ * For laser conmunite
+ * */
+#pragma once
+
+class LaserConnect
+{
+};

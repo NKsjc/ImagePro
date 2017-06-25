@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include "tim550.h"
+#include <opencv/cv.h>
+#include <opencv/cxcore.h>
+#include <opencv/highgui.h>
+
+/*    
+    int tim550_connect(char *ip,  char *port);
+    int goto_mod(tim550_t *dev, int mode);
+    int get_map_points((tim550_t *dev, fpoint_t scan_point[MAX_LOCATION],int *num);
+    int locate_with_points(tim550_t *dev, fpoint_t scan_point[MAX_LOCATION], int ext_msg, int num);
+    int get_location(tim550_t *dev, flocate_t *self_location, char locate_time);
+ * */ 
+
+int main(){
+//激光雷达建立链接
+    tim550_t nav_dev;
+    char * dev_ip="169.254.85.10"; //   169.254.135.234 192.168.3.111
+    char *dev_port="2112";  //                  2112 
+     int ret=0 ,i , loop_n=100;
+    
+    //fpoint_t mark_points[MAX_LOCATION];
+    int mark_num =0;
+    //flocate_t mylocate;
+    //enum NA_MOD working_mod;
+    //LDEBUG("debug %d\n",global_debug++);
+    nav_dev.sockfd = tim550_connect(dev_ip, dev_port);
+    if(nav_dev.sockfd <0 ){
+            ADEBUG("Can't connect to %s %s\n",dev_ip,dev_port);
+	    return 0;
+    }else{
+		
+              ADEBUG("connect to %s %s\n",dev_ip,dev_port);
+         }
+// 摄像头建立链接
+  //声明IplImage指针
+  IplImage* pFrame = NULL;
+
+ //获取摄像头
+  CvCapture* pCapture = cvCreateCameraCapture(0);
+  cvSetCaptureProperty(pCapture,CV_CAP_PROP_FRAME_WIDTH,1920);
+  cvSetCaptureProperty(pCapture,CV_CAP_PROP_FRAME_HEIGHT,1080);
+ ADEBUG("wrong!");
+  //创建窗口
+  cvNamedWindow("video", 0);
+  CvScalar s;
+//激光和摄像头数据采集和交互
+int X[300]={0},Y[300]={0},U[300]={0},V[300]={0};
+double a1=1.4,b1=-0.5,c1=1501,a2=0,b2=-0.1,c2=781;
+int loop=1;
+for(loop;;loop++){
+ printf("frame %d: \n",loop);
+  //ret =goto_mod(&nav_dev,'\0');
+    ret =goto_mod(&nav_dev,X,Y);
+    for(i=0;i<271;i++){
+	U[i]=a1*X[i]+b1*Y[i]+c1;
+	V[i]=a2*X[i]+b2*Y[i]+c2;
+}
+ pFrame=cvQueryFrame( pCapture );
+   cvShowImage("video",pFrame);
+	for(i=0;i<271;i++){
+	if(U[i]<0||U[i]>=1920||V[i]<0||V[i]>=1080){
+          continue;}
+        s = cvGet2D(pFrame, V[i],U[i]);
+	printf("num=%d,X=%d,Y=%d,B=%f, G=%f, R=%f\n",i,X[i],Y[i], s.val[0], s.val[1], s.val[2]);//B G R
+}
+	
+      if(!pFrame)break;
+   
+      char c=cvWaitKey(33);
+      if(c==27)break;
+
+  }
+cvReleaseCapture(&pCapture);
+cvDestroyWindow("video");
+return 0;
+}
+

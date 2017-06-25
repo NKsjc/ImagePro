@@ -1,0 +1,16 @@
+#bilixishu 
+#PI
+#PI=3.1415926
+#theta
+k1=-0.3  
+#delta_dis 
+k2=0.2
+#qianti juli 
+DIS=1.2
+#yunxing sudu 
+linearx=0.4
+#linear_a 40ms  yipai  m/s^2
+linear_a=0.03
+#angular_a   rad/s^2
+angular_a=0.05
+door_num=3
