@@ -1,0 +1,5 @@
+/home/jc/slambook/brife_ws/build/CMakeFiles/edit_cache.dir
+/home/jc/slambook/brife_ws/build/CMakeFiles/brife_main.dir
+/home/jc/slambook/brife_ws/build/CMakeFiles/chess_pad.dir
+/home/jc/slambook/brife_ws/build/CMakeFiles/create_black.dir
+/home/jc/slambook/brife_ws/build/CMakeFiles/rebuild_cache.dir
