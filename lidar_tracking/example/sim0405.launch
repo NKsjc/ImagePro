@@ -1,0 +1,12 @@
+<launch>
+	<!--load map using gmapping creat   test_1201_gmapping.yaml           test11_30_gammping.yaml-->
+	<!--node pkg="map_server" type="map_server" name="map_server" args="/home/jc/Documents/mapping_build/test_1201_gmapping.yaml" respawn="false" output="screen"/-->
+	<param name="use_sim_time" value="true"/>
+	<!--load rosbag :this is record by jcS 11.30 in JiKong Building 2016-11-30-20-05-13    2016-12-05-15-57-51    2016-12-05-16-09-10.bag  2017-04-14-120room_me_around 2016-12-01-15-26-25environment change three chairs  2016-11-30-20-05-13    2017-04-06_me_move_around   2017-04-14-120room_me_around  2017-05-01-22-27-45  2017-05-01-22-27-45-->
+<node pkg="rosbag" type="play"  name="player" args="--clock $(find lidar_tracking)/example/2017-06-22-14-51-56.bag"/>
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.15 0.0 0.0 0.0 0.0 0.0 /base_link /laser 40"/>
+    <node pkg="lidar_tracking" type="lidar_tracking_node" name="lidar_tracking" output="screen"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find lidar_tracking)/example/closedSet.rviz" required="true"/>
+</launch>
+
+
